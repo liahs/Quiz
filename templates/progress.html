@@ -1,0 +1,101 @@
+{% extends 'index.html' %}
+{% block title %}
+Quiz
+{% endblock%}
+{% block body %}
+<span id='q' style="display: none;">{{c}}</span>
+<div class="container">
+    <div class="row "> 
+        <div class="col-md-8 mx-auto bg-light text-dark  mt-4 py-3 slide">
+            <p id="ques"> </p>
+            ==><button class="ans4 btn btn-outline-dark rounded" onclick="clicked(3,'ans4')" style="width: 50%"></button><br> 
+            ==><button class="ans1 btn btn-outline-dark rounded" onclick="clicked(0,'ans1')" style="width: 50%"></button><br>    
+            ==><button class="ans3 btn btn-outline-dark rounded" onclick="clicked(2,'ans3')" style="width: 50%"></button><br>    
+            ==><button class="ans2 btn btn-outline-dark rounded" onclick="clicked(1,'ans2')" style="width: 50%"></button><br>  
+             </div>
+             <div class="col-md-8 mx-auto mt-3 bg-dark py-4 text-center">
+             <button class="nxt btn btn-outline-light rounded-pill ml-3 "style="width: 30%" onclick="change()" disabled>Next</button>
+            </div>
+    </div>
+</div>
+<script>
+let inital=new Date()
+var count=0
+x=document.querySelector('#q').innerHTML.replace(/&quot;/g,"'")
+x=document.querySelector('#q').innerHTML.replace(/&#39;/g,"'")
+x=document.querySelector('#q').innerHTML.replace(/&amp;/g,"&")
+x=JSON.parse(x)
+console.log(x)
+ques=document.querySelector("#ques")
+ans1=document.querySelector(".ans1")
+ans2=document.querySelector(".ans2")
+ans3=document.querySelector(".ans3")
+ans4=document.querySelector(".ans4")
+change()
+point=0
+function change(){
+    $('.nxt').attr('disabled',true)
+    document.querySelector('.pro').innerHTML="Progress"+count*10+"%"
+    
+    if(count<10){
+        if (count==9){
+     document.querySelector('.nxt').innerHTML="Finish"   
+    }
+        ans1.style.backgroundColor = "";
+        ans2.style.backgroundColor = "";
+        ans3.style.backgroundColor = "";
+        ans4.style.backgroundColor = "";
+        ques.innerHTML=`Question ${count+1} : ${x[count]["question"]}`
+        ans1.innerHTML=x[count]['answer'][0]
+        ans2.innerHTML=x[count]['answer'][1]
+        ans3.innerHTML=x[count]['answer'][2]
+        ans4.innerHTML=x[count]['answer'][3]
+        count++
+    }
+    else{
+        let final= new Date()
+        let sec = Math.floor((final-inital)/1000)
+        let minute=0
+        if(sec>60){
+             minute=Math.floor(sec/60)
+             sec=sec%60
+        }
+        alert('Total points : '+point+" | Total time taken "+minute+' min '+sec+' sec ')
+    }
+   
+
+}
+
+function clicked(x,clas){
+    $.ajax({
+        url:'{% url "check" %}',
+        type: "get",
+        data:{'x':x,'count':count-1},
+        success:function(data){
+            if(x==data.ans){
+                document.querySelector(`.${clas}`).style.backgroundColor = "rgba(0,255,0,0.6)";
+                point+=1
+            }
+            else{
+                document.querySelector(`.${clas}`).style.backgroundColor = "rgba(255,0,0,0.6)";
+                if(data.ans==0){
+                    ans1.style.backgroundColor = "rgba(0,255,0,0.6)"
+                }
+                if(data.ans==1){
+                    ans2.style.backgroundColor = "rgba(0,255,0,0.6)"
+                }
+                if(data.ans==2){
+                    ans3.style.backgroundColor = "rgba(0,255,0,0.6)"
+                }
+                if(data.ans==3){
+                    ans4.style.backgroundColor = "rgba(0,255,0,0.6)"
+                }
+            }
+        }
+    })
+    $('.nxt').removeAttr('disabled')
+    
+}
+
+</script>
+{% endblock %}

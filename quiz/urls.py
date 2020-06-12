@@ -20,5 +20,10 @@ from play import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='home'),
-    path('logout/',views.log_out,name='log_out')
+    path('login/',views.log_in,name='log_in'),
+    path('logout/',views.log_out,name='log_out'),
+    path('qlist/',views.qlist,name='qlist'),
+    path('progress/',views.progress,name='progress'),
+    path('check/',views.check,name='check'),
+    path('signup/',views.sign_up,name='sign_up')
 ]

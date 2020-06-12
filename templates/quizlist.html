@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+{% block title %}
+    Quizes
+{% endblock %}
+{% block styles %}
+<style>
+.hov:hover{
+    transform: scale(1.1);
+    box-shadow: 2px 3px rgb(224, 221, 221);
+    z-index: 1000000;
+    }
+a{
+  color:gray;
+}
+a:hover{
+  color:gray;
+  text-decoration: none;
+}
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+<div class="row row-cols-1 row-cols-md-3 my-3">
+    {% for key,item in content.items %}
+      
+      <div class="col mb-4 ">
+          <div class="card  hov">
+            <div class="card-body ">
+              <h5 class="card-title">Quiz ({{key}})</h5>
+              <p class="card-text">Total Questions : 10</p>
+              <a href="{% url 'progress' %}?p={{key}}">  <button class="btn btn-outline-dark rounded">Start</button>
+              </a>
+              </div>
+          </div>
+        </div>
+      
+        {% endfor %}
+      </div>
+    </div>
+{% endblock %}
