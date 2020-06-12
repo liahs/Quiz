@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from play import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',views.index,name='home'),
+    path('logout/',views.log_out,name='log_out')
 ]

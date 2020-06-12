@@ -1,0 +1,61 @@
+{% extends 'index.html' %}
+{% block title %}
+Quiz login
+{% endblock %}
+{% block body %}
+<div class="container-fluid ">
+        <div class="row img bg">
+            <div class="col-md-5 mx-auto p-5 my-5 trans">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group text-center">
+                        <span style="font-size: 30px;"><i class="fa fa-user"></i></span>
+                        <h5><strong>Sign In</strong></h5>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Enter Password</label>
+                        <div class="input-group">
+                            <input type="password" name="pwd" id="pwd" class="form-control "
+                                required >
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-transparent"><i class="fa fa-eye" id="icon"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="checkbox" name="rememberme"> <span>Remember Me</span>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="" class="text-dark">Forgot Password?</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-outline-dark rounded form-control">Sign In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $("#icon").click(function(){
+                let a=$("#pwd").attr("type");
+                if(a=="password"){
+                    $("#pwd").attr("type", "text");
+                    $("#icon").removeClass("fa fa-eye").addClass("fa fa-eye-slash");
+                }
+                else{
+                    $("#pwd").attr("type", "password");
+                    $("#icon").removeClass("fa fa-eye-slash").addClass("fa fa-eye");
+                }  
+            })
+        })
+    </script>
+{% endblock %}
