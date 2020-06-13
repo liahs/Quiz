@@ -1,1 +1,72 @@
 {% extends 'index.html' %}
+{% block title %}
+Sign Up
+{% endblock %}
+{% block body %}
+<div class="container-fluid ">
+    <div class="row img bg">
+        <div class="col-md-5 mx-auto p-5 my-5 trans">
+            <form action="{% url 'sign_up' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group text-center">
+                    <span style="font-size: 30px;"><i class="fa fa-user"></i></span>
+                    <h5><strong>Sign Up</strong></h5>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="usr" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="em" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Enter Password</label>
+                    <div class="input-group">
+                        <input type="password" name="pw" id="pw" class="form-control " onkeyup="check()"
+                            required >
+                   
+                    </div>
+                    <small id='hide'>Enter password length greater than 5</small>
+                </div>
+                <div class="form-group">
+                    <label>Enter Password(Again)</label>
+                    <div class="input-group">
+                        <input type="password" name="apw" id="apw"  class="form-control "
+                            required onkeyup="check()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-dark rounded form-control" disabled>Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+function check(){
+    pw=document.querySelector('#pw').value
+    apw=document.querySelector('#apw').value
+    msg=document.querySelector('#hide')
+    if(pw.length>6){
+        $('#hide').hide()
+        if(pw.length==apw.length){
+            document.querySelector('button').removeAttribute('disabled')
+            document.querySelector('#apw').style.backgroundColor='rgba(255,255,255,0)'
+        }
+        else{
+            document.querySelector('#apw').style.backgroundColor='rgba(200,0,0,0.3)'
+            document.querySelector('button').disabled=true
+        
+        }
+    }
+    else{
+        $('#hide').show()
+        document.querySelector('#apw').style.backgroundColor='rgba(200,0,0,0.3)'
+        document.querySelector('button').disabled=true
+    }
+}
+
+</script>
+{% endblock %}

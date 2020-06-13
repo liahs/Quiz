@@ -49,6 +49,13 @@ def log_in(req):
     return HttpResponseRedirect(reverse('qlist'))
 
 def sign_up(req):
+    if req.POST:
+        usr=req.POST['usr']
+        pw=req.POST['pw']
+        em=req.POST['em']
+        usr=User.objects.create(username=usr,email=em,password=pw)
+        login(req,usr)
+        return HttpResponseRedirect(reverse('qlist'))
     return render(req,'signup.html')
 
 def log_out(req):
@@ -66,7 +73,7 @@ def progress(req):
     r=requests.get(content[req.GET['p']])   
     r.encoding='utf-8'
     cont=[] 
-    
+    print(r.json())
     for j in r.json()['results']:
         rn=random.randint(0,2)
         if len(correct_ans)<10:

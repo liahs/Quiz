@@ -20,7 +20,9 @@
            color:rgba(1,1,1,.4);
            font-family: 'Arima Madurai', cursive;
        }
-   
+      ul>li>a{
+        font-size:18px;
+      }
     </style>
 {% block styles %}
 {% endblock %}
@@ -54,6 +56,7 @@
                                 <a class="nav-link" href="{% url 'qlist' %}">list</a>
                               </li>
                       </ul>
+                       <em class="pr-2">User: {{user.username}}</em>
                       <a href="{% url 'log_out'%}"><button class="btn btn-outline-success m-2 py-2 rounded-pill">Logout</button></a>
                         {% endif %}
                     </div>
