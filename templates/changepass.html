@@ -1,0 +1,119 @@
+{% extends 'index.html' %}
+{% block title %}
+Change Password
+{% endblock %}
+{% block body %}
+<div class="container mt-4">
+    <div class="row text-center " id="hide"  style="display: none">
+        <div class="col-md-12 bg-success py-3 rounded " >
+            <p  style="font-size: 17px;" id="msg"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+
+                <div class="form-group text-center">
+                    <span style="font-size: 30px;"><i class="fa fa-lock"></i></span>
+                    <h5><strong>Change Password</strong></h5>
+                </div>
+                <small>Please Enter password not less than 5 Characters</small>
+                <div class="form-group">
+                    <label>Enter New Password</label>
+                    <div class="input-group">
+                        <input type="password" name="pwd" id="pwd" class="form-control " onkeyup="check()"
+                            required >
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent"><i class="fa fa-eye" id="icon"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Enter New Password(Again)</label>
+                    <div class="input-group">
+                        <input type="password" name="pas" id="pas" class="form-control "  onkeyup="check()"
+                            required >
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent"><i class="fa fa-eye" id="icon1"></i></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button  class="sub btn btn-outline-dark rounded form-control" disabled onclick="alerted()">Change</button>
+                </div>
+        </div>
+    </div>
+</div>
+<script>
+
+p1=document.querySelector('#pwd')
+p2=document.querySelector('#pas')
+function check(){
+        if(p1.value.length<5 && p2.value.length<5){
+            p1.style.backgroundColor='rgba(200,0,0,0.3)'
+            p2.style.backgroundColor='rgba(200,0,0,0.3)'
+            $('.sub').attr('disabled','disabled')
+            }
+    
+        if(p1.value!==p2.value)
+       {
+        p1.style.backgroundColor='rgba(200,0,0,0.3)'
+        p2.style.backgroundColor='rgba(200,0,0,0.3)'
+        $('.sub').attr('disabled','disabled')
+    }
+    else{
+        if(p1.value.length>=5 && p2.value.length>=5){
+        p1.style.backgroundColor='rgba(200,0,0,0)'
+        p2.style.backgroundColor='rgba(200,0,0,0)'
+        $('.sub').removeAttr('disabled')
+        }
+    
+    }
+    
+}
+
+$(function(){
+            $("#icon").click(function(){
+                let a=$("#pwd").attr("type");
+                if(a=="password"){
+                    $("#pwd").attr("type", "text");
+                    $("#icon").removeClass("fas fa-eye").addClass("fas fa-eye-slash");
+                }
+                else{
+                    $("#pwd").attr("type", "password");
+                    $("#icon").removeClass("fas fa-eye-slash").addClass("fas fa-eye");
+                }  
+            })
+            $("#icon1").click(function(){
+                let a=$("#pas").attr("type");
+                if(a=="password"){
+                    $("#pas").attr("type", "text");
+                    $("#icon1").removeClass("fas fa-eye").addClass("fas fa-eye-slash");
+                }
+                else{
+                    $("#pas").attr("type", "password");
+                    $("#icon1").removeClass("fas fa-eye-slash").addClass("fas fa-eye");
+                }  
+            })
+        })
+function alerted(){
+    $.ajax({
+        url:"{% url 'password_change' %}",
+        type:"get",
+        data:{pas:$('#pas').val()},
+        success:function(data){
+            console.log(data)
+            console.log(data["msg"])
+            $("#msg").append(data["msg"]);
+            // $('.hide').removeAttr('style')
+            $('#hide').slideDown("slow")
+            document.querySelector('#pas').value=''
+            document.querySelector('#pwd').value=''
+            $('.sub').attr('disabled','disabled')
+            
+        }
+
+    })
+}
+</script>
+{% endblock %}

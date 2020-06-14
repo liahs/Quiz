@@ -39,8 +39,6 @@ def log_in(req):
     if req.method=='POST':
         name=req.POST['username']
         pas=req.POST['pwd']
-        print(name)
-        print(pas)
         user=authenticate(username=name,password=pas)
         print(user)
         if user is not None:
@@ -133,13 +131,13 @@ def check_user(req):
 
 def resetpass(req):
     print(req.POST)
-    if req.POST:
-        user = get_object_or_404(User,username=req.POST['username'])
-        user.password=req.POST["npass"]
-        user.save()
-        login(req,user)
-        return HttpResponseRedirect(reverse('log_in'))
-    if req.GET:
+    if req.method=='POST':
+        us = User.objects.get(username=req.POST['username'])
+        us.set_password(req.POST["npass"])
+        us.save()
+        login(req,us)
+        return HttpResponseRedirect(reverse('q_list'))
+    if req.method=='GET':
         try:
             un = req.GET["username"]
             user = get_object_or_404(User,username=un)
@@ -158,3 +156,17 @@ def resetpass(req):
 
 def forget_pass(req):
     return render(req,'forgetpass.html')
+
+def password_change(req):
+    if req.GET:
+        user=get_object_or_404(User,id=req.user.id)
+        pas=req.GET["pas"]
+        user.set_password(pas)
+        user.save()
+        login(req,user)
+        return JsonResponse({'msg':'Successfully password is changed!!!'})
+
+def change_pass(req):
+    return render(req,'changepass.html')
+
+        

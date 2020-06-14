@@ -31,5 +31,7 @@ urlpatterns = [
     path('pas_fail/',views.pass_fail,name='pass_fail'),
     path('check_user/',views.check_user,name='check_user'),
     path('forget_pass/',views.forget_pass,name="forget_pass"),
-    path('resetpass/',views.resetpass,name='resetpass')
+    path('resetpass/',views.resetpass,name='resetpass'),
+    path('changepass/',views.change_pass,name="changepass"),
+    path('passwordchanged/',views.password_change,name="password_change")
 ]

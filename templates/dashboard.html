@@ -10,6 +10,7 @@ Dashboard
             <p>Email : {{user.email}}</p>
             <p>Last login : {{user.last_login}}</p>
             <p>Date of register : {{user.date_joined}}</p>
+            <a class="ml-5" href="{% url 'changepass' %}"><button class="btn btn-dark rounded">Change Password</button></a>
         </div>
         <div class="col-md-6 ml-3 mt-4 py-2 rounded" style="height:200px;background:rgba(1,1,1,0.2);color:darkslategray">
             <p class="text-center" style="font-size:15px;font-weight:bold;">Table: total number of pass and failed int the quiz</p>
