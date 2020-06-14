@@ -46,7 +46,7 @@
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                       <ul class="navbar-nav mx-auto py-2 ">
                         <li class="nav-item ml-2">
-                          <a class="nav-link" href="#">Dashboard</a>
+                          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                         </li>
                         <li class="nav-item ml-2">
                           <a class="nav-link pro" href="#">Progress%</a>
@@ -57,7 +57,7 @@
                               </li>
                       </ul>
                        <em class="pr-2">User: {{user.username}}</em>
-                      <a href="{% url 'log_out'%}"><button class="btn btn-outline-success m-2 py-2 rounded-pill">Logout</button></a>
+                      <a href="{% url 'log_out'%}"><button class="btn btn-outline-dark m-2 py-2 rounded-pill">Logout</button></a>
                         {% endif %}
                     </div>
                   </nav>

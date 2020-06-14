@@ -1,1 +1,50 @@
 {% extends 'index.html' %}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block body %}
+<div class="container ">
+    <div class='row   '>
+        <div class='col-md-5 ml-3 mt-4 py-2 rounded' style="height:200px;font-weight:bold;background:rgba(1,1,1,0.2);color:darkslategray">
+            <p class="text-center" style="font-size:22px;">{{user.username}}</p>
+            <p>Email : {{user.email}}</p>
+            <p>Last login : {{user.last_login}}</p>
+            <p>Date of register : {{user.date_joined}}</p>
+        </div>
+        <div class="col-md-6 ml-3 mt-4 py-2 rounded" style="height:200px;background:rgba(1,1,1,0.2);color:darkslategray">
+            <p class="text-center" style="font-size:15px;font-weight:bold;">Table: total number of pass and failed int the quiz</p>
+            <table class="table table-stripped text-center">
+                <thead>
+                    <tr>
+                        <th>Passed</th>
+                        <th>Failed</th>
+                        <th>Total Number of quiz taken</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{passed}}</td>
+                        <td>{{failed}}</td>
+                        <td>{{total}}</td>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+<div class="row bg-light my-3 py-3">
+<div class="col=md-4 mx-auto">
+    <p style="font-size: 18px;">Saved Questions and answers</p>
+</div>
+</div>
+{% for d in qan %}
+<div class='row mt-3'>
+    <div class='col-md-7 mx-auto rounded py-3' style="background: rgba(100,100,1,0.3);font-size: 18px;color:black;">
+            Question {{d.ques|slice:"11:"}}<br>
+            Answer:  {{d.ans}}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

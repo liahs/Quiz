@@ -7,8 +7,10 @@ class QuesAndAns(models.Model):
     ques=models.TextField()
     ans=models.TextField()
 
+class Signup(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    pas=models.IntegerField(blank=True,null=True,default=0)
+    failed=models.IntegerField(blank=True,null=True,default=0)
 
-class TotalPandF(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
-    passed=models.IntegerField()
-    failed=models.IntegerField() 
+    def __str__(self):
+        return self.user.username

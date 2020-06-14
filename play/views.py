@@ -1,11 +1,14 @@
-from django.shortcuts import render,reverse
+from django.shortcuts import render,reverse,get_object_or_404
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from play.models import QuesAndAns,Signup
 import requests
 from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
+from django.core.mail import EmailMessage
 import random
 import json
+
 
 content={
     'General':'https://opentdb.com/api.php?amount=10&category=9&type=multiple',
@@ -33,19 +36,19 @@ def index(req):
     return render(req,'login.html')
 
 def log_in(req):
-    name=''
-    pas=''
-    message=''
     if req.method=='POST':
         name=req.POST['username']
         pas=req.POST['pwd']
-    user=authenticate(username=name,password=pas)
-    if user is not None:
-        login(req, user)
-        message=f'Successfully Logged in {name}'
-    else:
-        message='Sorry User is not authenticated'
-        return render(req,'login.html',{'msg':message,'alt':'alert-warning'})
+        print(name)
+        print(pas)
+        user=authenticate(username=name,password=pas)
+        print(user)
+        if user is not None:
+            login(req, user)
+            message=f'Successfully Logged in {name}'
+        else:
+            message='Sorry User is not authenticated'
+            return render(req,'login.html',{'msg':message,'alt':'alert-warning'})
     return HttpResponseRedirect(reverse('qlist'))
 
 def sign_up(req):
@@ -53,7 +56,8 @@ def sign_up(req):
         usr=req.POST['usr']
         pw=req.POST['pw']
         em=req.POST['em']
-        usr=User.objects.create(username=usr,email=em,password=pw)
+        usr=User.objects.create_user(username=usr,email=em,password=pw)
+        Signup.objects.create(user=usr)
         login(req,usr)
         return HttpResponseRedirect(reverse('qlist'))
     return render(req,'signup.html')
@@ -88,3 +92,69 @@ def check(req):
     print(correct_ans)
     count=req.GET['count']
     return JsonResponse({'ans':correct_ans[int(count)]})
+
+@login_required
+def dashboard(req):
+    qan=QuesAndAns.objects.filter(user=req.user)
+    usr=Signup.objects.get(user=req.user)
+    passed=usr.pas
+    failed=usr.failed
+    print(passed)
+    print(failed)
+    total=passed+failed
+   
+    return render(req,'dashboard.html',{'passed':passed,'failed':failed,'total':total,'qan':qan})
+
+@login_required
+def add_qans(req):
+    question=req.GET["qns"]
+    answer=req.GET["ans"]
+    QuesAndAns.objects.create(user=req.user,ques=question,ans=answer)
+    return JsonResponse({'added':'saved'})
+    
+@login_required
+def pass_fail(req):
+    usr=Signup.objects.get(user=req.user)
+    if req.GET['result']=='Pass':
+        usr.pas+=1
+    if req.GET['result']=='Fail':
+        usr.failed+=1
+    usr.save()
+    return JsonResponse({'status':'ok'})
+
+def check_user(req):
+    if req.method=="GET":
+        un = req.GET["usern"]
+        check = User.objects.filter(username=un)
+        if len(check) == 1:
+            return HttpResponse("Exists")
+        else:
+            return HttpResponse("Not Exists")
+
+def resetpass(req):
+    print(req.POST)
+    if req.POST:
+        user = get_object_or_404(User,username=req.POST['username'])
+        user.password=req.POST["npass"]
+        user.save()
+        login(req,user)
+        return HttpResponseRedirect(reverse('log_in'))
+    if req.GET:
+        try:
+            un = req.GET["username"]
+            user = get_object_or_404(User,username=un)
+            otp = random.randint(1000,9999)
+            msz = "Dear {} \n {} is your one time password (OTP) dont not share with others \n Thanks & Regards \n QuizManiac".format(user.username,otp)
+            try:
+                email = EmailMessage("Account Verification",msz,to=[user.email])
+                email.send()
+                return JsonResponse({"status": "sent","email":user.email,"rotp":otp})
+            except:
+                return JsonResponse({"status": "error","email":user.email})
+
+        except:
+            return JsonResponse({"status":"failed"})
+
+
+def forget_pass(req):
+    return render(req,'forgetpass.html')

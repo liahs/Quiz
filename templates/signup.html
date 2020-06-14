@@ -13,8 +13,11 @@ Sign Up
                     <h5><strong>Sign Up</strong></h5>
                 </div>
                 <div class="form-group">
+                        <small id="result"></small>
+                    </div>
+                <div class="form-group">
                     <label>Username</label>
-                    <input type="text" name="usr" class="form-control" required>
+                    <input type="text" name="usr" id='usr' class="form-control" onkeyup="checkuser()" required >
                 </div>
 
                 <div class="form-group">
@@ -25,48 +28,109 @@ Sign Up
                     <label>Enter Password</label>
                     <div class="input-group">
                         <input type="password" name="pw" id="pw" class="form-control " onkeyup="check()"
+                        required pattern="\w{5,}" 
+                                title="Password must contain atleast 5 characters"
                             required >
-                   
-                    </div>
-                    <small id='hide'>Enter password length greater than 5</small>
-                </div>
+                            <div class="input-group-append">
+                                    <span class="input-group-text bg-transparent text-black"><i class="fa fa-eye" id="icon"></i></span>
+                                </div>
+</div>
+                 
                 <div class="form-group">
                     <label>Enter Password(Again)</label>
                     <div class="input-group">
-                        <input type="password" name="apw" id="apw"  class="form-control "
-                            required onkeyup="check()">
+                        <input type="password" name="apw" id="apw"  class="form-control "         required pattern="\w{5,}" 
+                        title="Password must contain atleast 5 characters"
+                            required onkeyup="check()" >   
+                            <div class="input-group-append">
+                                    <span class="input-group-text bg-transparent text-black"><i class="fa fa-eye" id="icon1"></i></span>
+                                </div>
+
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-outline-dark rounded form-control" disabled>Register</button>
+                    <button type="submit" class="btn btn-outline-dark rounded form-control " id="submitbtn" disabled>Register</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
-function check(){
-    pw=document.querySelector('#pw').value
-    apw=document.querySelector('#apw').value
-    msg=document.querySelector('#hide')
-    if(pw.length>6){
-        $('#hide').hide()
-        if(pw.length==apw.length){
-            document.querySelector('button').removeAttribute('disabled')
-            document.querySelector('#apw').style.backgroundColor='rgba(255,255,255,0)'
-        }
-        else{
-            document.querySelector('#apw').style.backgroundColor='rgba(200,0,0,0.3)'
-            document.querySelector('button').disabled=true
+// function check(){
+//     pw=document.querySelector('#pw').value
+//     apw=document.querySelector('#apw').value
+//     msg=document.querySelector('#hide')
+//     if(pw.length>6){
+//         $('#hide').hide()
+//         if(pw.length==apw.length){
+//             document.querySelector('button').removeAttribute('disabled')
+//             document.querySelector('#apw').style.backgroundColor='rgba(255,255,255,0)'
+//         }
+//         else{
+//             document.querySelector('#apw').style.backgroundColor='rgba(200,0,0,0.3)'
+//             document.querySelector('button').disabled=true
         
+//         }
+//     }
+//     else{
+//         $('#hide').show()
+//         document.querySelector('#apw').style.backgroundColor='rgba(200,0,0,0.3)'
+//         document.querySelector('button').disabled=true
+//     }
+// }
+function check(){
+            let p = $("#pw").val();
+            let cp = $("#apw").val();
+            if(p==cp){
+                $("#pw").css({border:"2px solid skyblue"});
+                $("#apw").css({border:"2px solid skyblue"});
+            }
+            else{
+                $("#pw").css({border:"2px solid red"});
+                $("#apw").css({border:"2px solid red"});
+            }
         }
-    }
-    else{
-        $('#hide').show()
-        document.querySelector('#apw').style.backgroundColor='rgba(200,0,0,0.3)'
-        document.querySelector('button').disabled=true
-    }
-}
+        $(function(){
+            $("#icon").click(function(){
+                let a=$("#pw").attr("type");
+                if(a=="password"){
+                    $("#pw").attr("type", "text");
+                    $("#icon").removeClass("fas fa-eye").addClass("fas fa-eye-slash");
+                }
+                else{
+                    $("#pw").attr("type", "password");
+                    $("#icon").removeClass("fas fa-eye-slash").addClass("fas fa-eye");
+                }  
+            })
+            $("#icon1").click(function(){
+                let a=$("#apw").attr("type");
+                if(a=="password"){
+                    $("#apw").attr("type", "text");
+                    $("#icon1").removeClass("fas fa-eye").addClass("fas fa-eye-slash");
+                }
+                else{
+                    $("#apw").attr("type", "password");
+                    $("#icon1").removeClass("fas fa-eye-slash").addClass("fas fa-eye");
+                }  
+            })
+        })
 
+        function checkuser(){
+        let un = document.getElementById("usr").value;
+        $.ajax({
+            url:"{% url 'check_user' %}",
+            type:"get",
+            data:{usern:un},
+            success:function(data){
+                if(data == "Exists"){
+                    $("#result").html("This Username is already taken").addClass("text-danger");
+                    $("#submitbtn").attr("disabled","disabled")
+                }else{
+                    $("#result").html("");
+                    $("#submitbtn").removeAttr("disabled")
+                }
+            }
+        })
+    }
 </script>
 {% endblock %}

@@ -25,5 +25,11 @@ urlpatterns = [
     path('qlist/',views.qlist,name='qlist'),
     path('progress/',views.progress,name='progress'),
     path('check/',views.check,name='check'),
-    path('signup/',views.sign_up,name='sign_up')
+    path('signup/',views.sign_up,name='sign_up'),
+    path('dashboard/',views.dashboard,name='dashboard'),
+    path('add_qans/',views.add_qans,name='add_qans'),
+    path('pas_fail/',views.pass_fail,name='pass_fail'),
+    path('check_user/',views.check_user,name='check_user'),
+    path('forget_pass/',views.forget_pass,name="forget_pass"),
+    path('resetpass/',views.resetpass,name='resetpass')
 ]
