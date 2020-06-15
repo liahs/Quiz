@@ -165,7 +165,7 @@ def password_change(req):
         user.save()
         login(req,user)
         return JsonResponse({'msg':'Successfully password is changed!!!'})
-
+@login_required
 def change_pass(req):
     return render(req,'changepass.html')
 
