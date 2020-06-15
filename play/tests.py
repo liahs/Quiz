@@ -1,7 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase,Client
 from django.contrib.auth.models import User
 from .models import  QuesAndAns,Signup
 
+from django.db.models import Max
 
 # Create your tests here.
 
@@ -32,4 +33,10 @@ class ModelTestCase(TestCase):
         self.assertEqual(user.qns_ans.count(),2)
         user=User.objects.get(username='shail')
         self.assertEqual(user.qns_ans.count(),1)
+    
+    def test_index(self):
+        c=Client()
+        response=c.get("/")
+        self.assertEqual(response.status_code,200)
+    
     
