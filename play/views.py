@@ -74,16 +74,29 @@ correct_ans=[]
 def progress(req):
     r=requests.get(content[req.GET['p']])   
     r.encoding='utf-8'
-    cont=[] 
-    print(r.json())
+    cont=[]
+    prev=0 
     for j in r.json()['results']:
-        rn=random.randint(0,2)
+        rn=random.randint(0,3)
+        if prev==rn:
+            if rn==3:
+                rn=random.randint(0,2)
+            if rn==0:
+                rn=random.randint(1,3)
+            if rn==1:
+                rn=random.randint(2,3)
+            else:
+                rn=random.randint(0,1)
+        prev=rn
+        incorrects=j["incorrect_answers"]+[0]
+        print(incorrects)
         if len(correct_ans)<10:
             correct_ans.append(rn)
         cont.append(
             {'question':j['question'],
-              'answer':j["incorrect_answers"][:rn]+[j['correct_answer']]+j['incorrect_answers'][rn:]
+              'answer':incorrects[:rn]+[j['correct_answer']]+j['incorrect_answers'][rn:4]
               })
+        print(incorrects[:rn]+[j['correct_answer']]+j['incorrect_answers'][rn:4])
     return render(req,'progress.html',{'c':json.dumps(cont)})
 
 def check(req):
@@ -136,7 +149,7 @@ def resetpass(req):
         us.set_password(req.POST["npass"])
         us.save()
         login(req,us)
-        return HttpResponseRedirect(reverse('q_list'))
+        return HttpResponseRedirect(reverse('qlist'))
     if req.method=='GET':
         try:
             un = req.GET["username"]
